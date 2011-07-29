@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "account_watcher", "examples\account_watcher.vcxproj", "{6C6F3120-AEE1-4337-9F9A-138F5C2CBC5E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "account_watcher", "examples64\account_watcher.vcxproj", "{6C6F3120-AEE1-4337-9F9A-138F5C2CBC5E}"
 EndProject
-Project("{DD29B9D6-BE45-40CD-9431-CD9DC87AA2A1}") = "market_watcher_handler", "examples\market_watcher_handler.vcxproj", "{340466F2-A247-4B73-B6FA-C47BD8839C01}"
+Project("{DD29B9D6-BE45-40CD-9431-CD9DC87AA2A1}") = "market_watcher_handler", "examples64\market_watcher_handler.vcxproj", "{340466F2-A247-4B73-B6FA-C47BD8839C01}"
 EndProject
-Project("{61EB2E25-E36C-45DF-8312-CB0EFFA97C84}") = "place_order", "examples\place_order.vcxproj", "{604C98A2-9E84-4C49-9058-D44AEAB4D66D}"
+Project("{61EB2E25-E36C-45DF-8312-CB0EFFA97C84}") = "place_order", "examples64\place_order.vcxproj", "{604C98A2-9E84-4C49-9058-D44AEAB4D66D}"
 EndProject
 
 Global
