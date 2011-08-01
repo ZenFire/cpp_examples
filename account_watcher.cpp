@@ -79,9 +79,6 @@ class WatcherHandler : public event::EventHandler
   on_position(const zenfire::account::Event &event, const Position pos)
     {
     std::cout << "Got Position type=" << event.type() << " acct=" << pos->account_id().id() << " inst=" << pos->instrument_id().id() << " size=" << pos->size() << " open_pl=" << int64_t(pos->open_pl()) << " closed_pl=" << int64_t(pos->closed_pl()) << std::endl;
-
-
-    //BIG_DEBUG("POSITION type = %d account_id = %u instrument_id = %u size= %d open_pl = %ld closed_pl = %ld", );
     return 0;
     }
   };
