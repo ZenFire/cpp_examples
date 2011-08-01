@@ -7,4 +7,9 @@ into the extracted directory for libzenfire.
 
 * make
 
+If you're building against the 32 bit library on a 64 bit system, you'll need
+to use this command instead:
+
+* USE32=yes make
+
 That was easy!
