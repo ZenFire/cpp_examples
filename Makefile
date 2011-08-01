@@ -22,6 +22,11 @@ test:
 CPPFLAGS+= -I$(TOP_DIR)/include -std=c++0x
 LDFLAGS+= -L$(TOP_DIR)/lib64
 
+ifdef USE32
+	CPPFLAGS += -m32
+	LDFLAGS += -m32
+endif 
+
 ################################################################################
 
 
