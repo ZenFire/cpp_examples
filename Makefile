@@ -30,7 +30,7 @@ endif
 ################################################################################
 
 
-%.o: ../%.cpp
+%.o: ../%/%.cpp
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
 
 account_watcher: account_watcher.o
