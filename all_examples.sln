@@ -39,7 +39,7 @@ Global
 		{604C98A2-9E84-4C49-9058-D44AEAB4D66D}.Debug|x64.ActiveCfg = Debug|x64
 		{604C98A2-9E84-4C49-9058-D44AEAB4D66D}.Debug|x64.Build.0 = Debug|x64
 		{604C98A2-9E84-4C49-9058-D44AEAB4D66D}.Release|x64.ActiveCfg = Release|x64
-		{604C98A2-9E84-4C49-9058-D44AEAB4D66D}.Release|x64.Build.0 = Release|Win32
+		{604C98A2-9E84-4C49-9058-D44AEAB4D66D}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
