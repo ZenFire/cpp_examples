@@ -199,7 +199,7 @@ int main(int argc, char **argv)
 
   WatcherHandler callback;
   TickDisplayer tickback;
-  event::Client *zf = zenfire::event::Client::create("examples.conf", &callback);
+  event::Client *zf = zenfire::event::Client::create_ini("examples.conf", &callback);
   
   // get auth info from the command line
   std::string user(argv[1]);

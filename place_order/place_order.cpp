@@ -126,7 +126,7 @@ int main(int argc, char **argv)
     die_usage();
 
   PlacerHandler callback;
-  event::Client *zf = zenfire::event::Client::create("examples.conf", &callback);
+  event::Client *zf = zenfire::event::Client::create_ini("examples.conf", &callback);
 
   std::string user = std::string(argv[1]);
   std::string pass = std::string(argv[2]);
