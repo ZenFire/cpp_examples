@@ -49,6 +49,8 @@ void die_usage()
 
 using namespace zenfire;
 
+// this class implements the event::EventHandler functions by subclassing: see the documentation
+// for a full list of functions.
 class WatcherHandler : public event::EventHandler
   {
 protected:
@@ -56,16 +58,19 @@ protected:
   int
   on_status(const Status *status)
     {
+    // your login failed; probably a bad username or password.
     if (status->type() == alert::LOGIN_FAILED)
       {
       std::cerr << "Login Failed" << std::endl;
       std::exit(1);
       }
+    // the version of the API you're using is too old. You can't log in.
     if (status->type() == alert::BAD_VERSION)
       {
       std::cerr << "API version out of date." << std::endl;
       std::exit(1);
       }
+    // everything's good! You're logged in.
     if (status->type() == alert::LOGIN_COMPLETE)
       std::cout << "Login OK" << std::endl;
 

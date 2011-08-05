@@ -44,22 +44,27 @@ void die_usage()
 // C A L L B A C K S #########################################################//
 //############################################################################//
 
+// this class implements the event::EventHandler functions by subclassing: see the documentation
+// for a full list of functions.
 class WatcherHandler : public event::EventHandler
   {
   virtual
   int
   on_status(const Status *status)
     {
+    // your login failed; probably a bad username or password.
     if (status->type() == alert::LOGIN_FAILED)
       {
       std::cerr << "Login Failed" << std::endl;
       std::exit(1);
       }
+    // the version of the API you're using is too old. You can't log in.
     if (status->type() == alert::BAD_VERSION)
       {
       std::cerr << "API version out of date." << std::endl;
       std::exit(1);
       }
+    // everything's good! You're logged in.
     if (status->type() == alert::LOGIN_COMPLETE)
       std::cout << "Login OK" << std::endl;
 
@@ -78,7 +83,7 @@ class WatcherHandler : public event::EventHandler
   int
   on_position(const zenfire::account::Event &event, const Position pos)
     {
-    std::cout << "Got Position type=" << event.type() << " acct=" << pos->account_id().id() << " inst=" << pos->instrument_id().id() << " size=" << pos->size() << " open_pl=" << int64_t(pos->open_pl()) << " closed_pl=" << int64_t(pos->closed_pl()) << std::endl;
+    std::cout << "Got Position type=" << event.type() << " account=" << pos->account_id().id() << " instrument=" << pos->instrument_id().id() << " size=" << pos->size() << " open_pl=" << int64_t(pos->open_pl()) << " closed_pl=" << int64_t(pos->closed_pl()) << std::endl;
     return 0;
     }
 
@@ -155,6 +160,7 @@ int main(int argc, char** argv)
   std::string user = std::string(argv[1]);
   std::string pass = std::string(argv[2]);
 
+  // wait up to 2000ms for a response to the login message.
   zf->login(user, pass);
   if (!zf->sync(2000))
     {
@@ -162,6 +168,7 @@ int main(int argc, char** argv)
     std::exit(1);
     }
 
+  // wait 300 seconds, during which all the events that we've written handlers for will print out results to the screen
   COMPAT_SLEEP(300);
 
   delete zf;
