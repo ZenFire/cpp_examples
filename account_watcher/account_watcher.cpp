@@ -81,6 +81,67 @@ class WatcherHandler : public event::EventHandler
     std::cout << "Got Position type=" << event.type() << " acct=" << pos->account_id().id() << " inst=" << pos->instrument_id().id() << " size=" << pos->size() << " open_pl=" << int64_t(pos->open_pl()) << " closed_pl=" << int64_t(pos->closed_pl()) << std::endl;
     return 0;
     }
+
+  void
+  print_orderinfo(std::string naming, const Order& ord, bool detail=false)
+    {
+    std::cout << naming << " id=" << ord->id() << " account_id=" << ord->account_id() << " qty=" << ord->qty();
+
+    if (detail)
+      std::cout << " qty_filled=" << ord->qty_filled() << " qty_canceled=" << ord->qty_canceled() << " reason=" << uint16_t(ord->reason()) << " status=" << uint16_t(ord->status()) << " error_code=" << ord->error_code() << " message=\"" << ord->message() << "\"";
+
+    std::cout << std::endl;
+    }
+
+  // printers for orders
+  virtual int
+  on_open(const Order ord)
+    { print_orderinfo("OPENED", ord); return 0; }
+  virtual int
+  on_fill(const Order ord)
+    { print_orderinfo("FILL", ord); return 0; }
+  virtual int
+  on_bust(const Order ord)
+    { print_orderinfo("BUST", ord); return 0; }
+  virtual int
+  on_fail(const Order ord)
+    { print_orderinfo("FAIL", ord, true); return 0; }
+  virtual int
+  on_modify(const Order ord)
+    { print_orderinfo("MODIFY", ord, true); return 0; }
+  virtual int
+  on_cancel(const Order ord)
+    { print_orderinfo("CANCEL", ord); return 0; }
+  virtual int
+  on_cancel_fail(const Order ord)
+    { print_orderinfo("CANCEL FAIL", ord, true); return 0; }
+  virtual int
+  on_modify_fail(const Order ord)
+    { print_orderinfo("MODIFY FAIL", ord, true); return 0; }
+  virtual int
+  on_pending(const Order ord)
+    { print_orderinfo("PENDING", ord); return 0; }
+  virtual int
+  on_modify_pending(const Order ord)
+    { print_orderinfo("MODIFY PENDING", ord); return 0; }
+  virtual int
+  on_invalid(const Order ord)
+    { print_orderinfo("OPENED", ord, true); return 0; }
+  virtual int
+  on_modify_invalid(const Order ord)
+    { print_orderinfo("MODIFY INVALID", ord, true); return 0; }
+  virtual int
+  on_modify_reject(const Order ord)
+    { print_orderinfo("MODIFY REJECT", ord, true); return 0; }
+  virtual int
+  on_reject(const Order ord)
+    { print_orderinfo("REJECT", ord, true); return 0; }
+  virtual int
+  on_trigger(const Order ord)
+    { print_orderinfo("TRIGGER", ord); return 0; }
+  virtual int
+  on_replay(const Order ord)
+    { print_orderinfo("REPLAY", ord, true); return 0; }
   };
 
 int main(int argc, char** argv)
@@ -103,6 +164,5 @@ int main(int argc, char** argv)
 
   COMPAT_SLEEP(300);
 
-  zf->logout();
   delete zf;
   }
