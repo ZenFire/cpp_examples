@@ -15,3 +15,5 @@ to use this command instead:
 * USE32=yes make -f ../Makefile
 
 That was easy!
+
+If you'd like to build the examples against the shared library instead of the static library, add USESHARED=yes to the environment of make (just like USE32 above).  You'll need to set LD_LIBRARY_PATH to include the directory containing the .so files in the distributed library to run the built examples.

@@ -8,7 +8,11 @@ BIN=account_watcher market_watcher_handler place_order
 OBJS=account_watcher.o market_watcher_handler.o place_order.o
 TOP_DIR=../..
 
-LIBS=$(TOP_DIR)/lib*/libzenfire.a -lpthread -lssl -lcrypto
+ifdef USESHARED
+	LIBS=$(TOP_DIR)/lib*/libzenfire.so -lpthread -lssl -lcrypto
+else
+	LIBS=$(TOP_DIR)/lib*/libzenfire.a -lpthread -lssl -lcrypto
+endif
 
 .PHONY: all clean test
 all : $(BIN)
