@@ -34,9 +34,11 @@
 //############################################################################//
 //! display usage and exit
 
-void die_usage()
+void die_usage(zenfire::event::Client* zf)
   {
-  std::cout << "usage: user password" << std::endl;
+  if (zf != NULL)
+    delete zf;
+  std::cout << "usage: [user password]" << std::endl;
   std::exit(0);
   }
 
@@ -127,16 +129,29 @@ price_type get_price_interactive(std::string prompt)
 
 int main(int argc, char **argv)
   {
-  if(argc != 3)
-    die_usage();
-
   PlacerHandler callback;
   event::Client *zf = zenfire::event::Client::create_ini("examples.conf", &callback);
 
-  std::string user = std::string(argv[1]);
-  std::string pass = std::string(argv[2]);
+  if(argc != 3)
+    {
+    try
+      {
+      zf->login();
+      }
+    catch (exception::access_missing& am)
+      {
+      die_usage(zf);
+      }
+    }
+  else
+    {
+    std::string user = std::string(argv[1]);
+    std::string pass = std::string(argv[2]);
 
-  zf->login(user, pass);
+    // wait up to 2000ms for a response to the login message.
+    zf->login(user, pass);
+    }
+
   if (!zf->sync(2000))
     {
     std::cerr << "Didn't get a response to login fast enough, exiting." << std::endl;

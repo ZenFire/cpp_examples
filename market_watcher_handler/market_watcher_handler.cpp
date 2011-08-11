@@ -37,9 +37,11 @@
 //############################################################################//
 //! display usage and exit
 
-void die_usage()
+void die_usage(zenfire::event::Client* zf)
   {
-  std::cout << "usage: user password symbol" << std::endl;
+  if (zf != NULL)
+    delete zf;
+  std::cout << "usage: symbol [user password]" << std::endl;
   std::exit(0);
   }
 
@@ -106,6 +108,8 @@ public:
 
 class TickDisplayer : public feed::Handler
   {
+public:
+  Instrument inst;
 protected:
   virtual
   int
@@ -125,7 +129,14 @@ protected:
   void
   display_tick(const char* tt, const Tick& t)
     {
-    std::cout << "TICK::" << tt << " @" << t.timestamp() << ":" << t.micros() << " " << t.instrument_id().id() << " price=" << t.price() << std::endl;
+    std::cout << tt << " @" << t.timestamp() << ":" << t.micros() << " " << t.instrument_id().id() << " price=";
+
+    if (inst)
+      std::cout << inst->format_price(t);
+    else
+      std::cout << t.price();
+
+    std::cout << std::endl;
     }
 
   virtual
@@ -199,19 +210,37 @@ protected:
 
 int main(int argc, char **argv)
   {
-  if(argc != 4)
-    die_usage();
-
   WatcherHandler callback;
   TickDisplayer tickback;
+
   event::Client *zf = zenfire::event::Client::create_ini("examples.conf", &callback);
   
-  // get auth info from the command line
-  std::string user(argv[1]);
-  std::string pass(argv[2]);
-  std::string symbol(argv[3]);
+  if (argc < 2)
+    {
+    die_usage(zf);
+    }
+  else if(argc != 4)
+    {
+    try
+      {
+      zf->login();
+      }
+    catch (exception::access_missing& am)
+      {
+      die_usage(zf);
+      }
+    }
+  else
+    {
+    std::string user = std::string(argv[2]);
+    std::string pass = std::string(argv[3]);
 
-  zf->login(user, pass);
+    // wait up to 2000ms for a response to the login message.
+    zf->login(user, pass);
+    }
+
+  std::string symbol(argv[1]);
+
   if (!zf->sync(2000))
     {
     std::cerr << "Didn't get a response to login fast enough, exiting." << std::endl;
@@ -225,10 +254,10 @@ int main(int argc, char **argv)
     }
 
   zf->find_instrument(symbol);
-
-  COMPAT_SLEEP(3);
+  zf->sync(3000);
 
   Instrument inst = zf->get_instrument(symbol);
+  tickback.inst = inst;
 
   if(!inst)
     {
