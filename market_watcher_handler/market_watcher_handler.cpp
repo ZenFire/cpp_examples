@@ -136,7 +136,7 @@ protected:
     else
       std::cout << t.price();
 
-    std::cout << std::endl;
+    std::cout << " size=" << t.size() << std::endl;
     }
 
   virtual
