@@ -86,14 +86,6 @@ protected:
 
   virtual
   int
-  on_open(const Order ord)
-    {
-    std::cout << "opened" << std::endl;
-    return 0;
-    }
-
-  virtual
-  int
   on_instrument(event::request_id_type id, const Instrument inst)
     {
     if (inst->id() == 0)
@@ -105,6 +97,18 @@ protected:
 
 public:
   std::vector<uint32_t> acct_ids;
+};
+
+class AccountHandler : public acct::EventHandler
+  {
+protected:
+  virtual
+  int
+  on_open(const Order ord)
+    {
+    std::cout << "opened" << std::endl;
+    return 0;
+    }
 };
 
 //############################################################################//
@@ -179,6 +183,9 @@ int main(int argc, char **argv)
     }
 
   std::cout << "Using account " << acctno << std::endl;
+
+  AccountHandler acb;
+  acct::SubscriptionPtr asub = zf->account_subscribe(acctno, &acb);
 
   std::string prod;
 
@@ -289,7 +296,7 @@ int main(int argc, char **argv)
   specs->set_zentag(std::string("hello this is a test"));
   specs->set_tag(std::string("test"));
 
-  zenfire::Order placed = zf->place_order(specs);
+  zenfire::Order placed = asub->place_order(specs);
 
   for (int i = 0; i < 10; i++)
     {
@@ -302,7 +309,6 @@ int main(int argc, char **argv)
     }
   std::cout << "did not fill within 10 seconds, but may later. goodbye." << std::endl;
   
-  zf->logout();
   delete zf;
   }
 
