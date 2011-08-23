@@ -80,6 +80,33 @@ class WatcherHandler : public event::EventHandler
     std::cout << "Got Account #" << acct->id() << " \"" << acct->code() << "\"" << std::endl;
     return 0;
     }
+  };
+
+class AccountHandler : public acct::EventHandler
+  {
+  virtual
+  int
+  on_status(const Status *status)
+    {
+    // your login failed; probably a bad username or password.
+    if (status->type() == alert::LOGIN_FAILED)
+      {
+      std::cerr << "Login Failed for account subscription." << std::endl;
+      std::exit(1);
+      }
+    // the version of the API you're using is too old. You can't log in.
+    if (status->type() == alert::BAD_VERSION)
+      {
+      std::cerr << "API version out of date for account subscription." << std::endl;
+      std::exit(1);
+      }
+    // everything's good! You're logged in.
+    if (status->type() == alert::LOGIN_COMPLETE)
+      std::cout << "Login OK for account subscription." << std::endl;
+
+    return 0;
+    }
+
 
   virtual
   int
@@ -154,6 +181,7 @@ class WatcherHandler : public event::EventHandler
 int main(int argc, char** argv)
   {
   WatcherHandler callback;
+  AccountHandler account_callback;
   event::Client *zf = zenfire::event::Client::create_ini("examples.conf", &callback);
 
   if(argc != 3)
@@ -181,6 +209,12 @@ int main(int argc, char** argv)
     std::cerr << "Didn't get a response to login fast enough, exiting." << std::endl;
     std::exit(1);
     }
+
+  std::vector<acct::SubscriptionPtr> acct_subs;
+
+  auto accts = zf->list_accounts();
+  for (auto a = accts.begin(); a != accts.end(); a++)
+    acct_subs.push_back(zf->account_subscribe((*a).id(), &account_callback));
 
   // wait 300 seconds, during which all the events that we've written handlers for will print out results to the screen
   COMPAT_SLEEP(300);
