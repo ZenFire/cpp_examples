@@ -89,7 +89,7 @@ protected:
   on_instrument(event::request_id_type id, const Instrument inst)
     {
     if (inst->id() == 0)
-      std::cout << "Could not find instrument." << std::endl; // API-72 this does not actually happen, bug in API
+      std::cout << "Could not find instrument." << std::endl;
     else
       std::cout << "Got " << inst->symbol() << std::endl;  
     return 0;
