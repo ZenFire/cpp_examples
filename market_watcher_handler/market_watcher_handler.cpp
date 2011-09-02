@@ -24,6 +24,7 @@
 #include <zenfire/Tick.hpp>
 #include "zf_examples_compat.hpp"
 
+#include <string>
 #include <map>
 #include <iostream>
 #include <sstream>

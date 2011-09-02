@@ -22,6 +22,7 @@
 #include <zenfire/event/Client.hpp>
 #include "zf_examples_compat.hpp"
 
+#include <string>
 #include <iostream>
 #include <sstream>
 #include <ctime>

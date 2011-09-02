@@ -22,6 +22,7 @@
 #include <zenfire/event/Client.hpp>
 #include <zenfire/Account.hpp>
 #include <zenfire/Position.hpp>
+#include <string>
 #include <iostream>
 #include "zf_examples_compat.hpp"
 
