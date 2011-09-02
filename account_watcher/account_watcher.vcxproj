@@ -146,7 +146,7 @@
     <ClCompile Include="account_watcher.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Library Include="..\..\lib64\Debug\zenfire.lib" />
+    <Library Include="..\..\lib64\$(Configuration)\zenfire.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
