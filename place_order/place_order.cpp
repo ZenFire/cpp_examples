@@ -100,7 +100,7 @@ public:
   std::vector<uint32_t> acct_ids;
 };
 
-class AccountHandler : public acct::EventHandler
+class AccountHandler : public account::EventHandler
   {
 protected:
   virtual
@@ -186,7 +186,7 @@ int main(int argc, char **argv)
   std::cout << "Using account " << acctno << std::endl;
 
   AccountHandler acb;
-  acct::SubscriptionPtr asub = zf->account_subscribe(acctno, &acb);
+  account::SubscriptionPtr asub = zf->account_subscribe(acctno, &acb);
 
   std::string prod;
 

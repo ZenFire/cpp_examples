@@ -83,7 +83,7 @@ class WatcherHandler : public event::EventHandler
     }
   };
 
-class AccountHandler : public acct::EventHandler
+class AccountHandler : public account::EventHandler
   {
   virtual
   int
@@ -211,7 +211,7 @@ int main(int argc, char** argv)
     std::exit(1);
     }
 
-  std::vector<acct::SubscriptionPtr> acct_subs;
+  std::vector<account::SubscriptionPtr> acct_subs;
 
   auto accts = zf->list_accounts();
   for (auto a = accts.begin(); a != accts.end(); a++)
