@@ -61,13 +61,13 @@ protected:
     // your login failed; probably a bad username or password.
     if (status->type() == alert::LOGIN_FAILED)
       {
-      std::cerr << "Login Failed" << std::endl;
+      std::cerr << "Login Failed" << std::endl << std::flush;
       std::exit(1);
       }
     // the version of the API you're using is too old. You can't log in.
     if (status->type() == alert::BAD_VERSION)
       {
-      std::cerr << "API version out of date." << std::endl;
+      std::cerr << "API version out of date." << std::endl << std::flush;
       std::exit(1);
       }
     // everything's good! You're logged in.
@@ -135,7 +135,16 @@ price_type get_price_interactive(std::string prompt)
 int main(int argc, char **argv)
   {
   PlacerHandler callback;
-  event::Client *zf = zenfire::event::Client::create_ini("examples.conf", &callback);
+  event::Client *zf = NULL;
+  try {
+    zf = zenfire::event::Client::create_ini("examples.conf", &callback);
+  } catch (zenfire::exception::invalid_config& ic) {
+    std::cout << "could not load config, please run from the directory containing examples.conf." << std::endl << std::flush;
+    std::exit(1);
+  } catch (zenfire::exception::keys_missing& km) {
+    std::cout << "zenfire::exception::keys_missing caught, refer to documentation." << std::endl << std::flush;
+    std::exit(1);
+  }
 
   if(argc != 3)
     {
@@ -159,13 +168,13 @@ int main(int argc, char **argv)
 
   if (!zf->sync(2000))
     {
-    std::cerr << "Didn't get a response to login fast enough, exiting." << std::endl;
+    std::cerr << "Didn't get a response to login fast enough, exiting." << std::endl << std::flush;
     std::exit(1);
     }
 
   if(callback.acct_ids.size() < 1)
     {
-    std::cerr << "No accounts received, credentials probably bad." << std::endl;
+    std::cerr << "No accounts received, credentials probably bad." << std::endl << std::flush;
     std::exit(1);
     }
 
@@ -201,7 +210,7 @@ int main(int argc, char **argv)
 
   if (!product)
     {
-    std::cerr << "did not get the product." << std::endl;
+    std::cerr << "did not get the product." << std::endl << std::flush;
     std::exit(1);
     }
 
@@ -209,7 +218,7 @@ int main(int argc, char **argv)
 
   if (!product_exchange)
     {
-    std::cerr << "did not get an exchange matching the product." << std::endl;
+    std::cerr << "did not get an exchange matching the product." << std::endl << std::flush;
     std::exit(1);
     }
 
