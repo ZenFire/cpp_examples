@@ -53,7 +53,7 @@ class WatcherHandler : public event::EventHandler
   {
   virtual
   int
-  on_status(const Status *status)
+  on_status(const Status* status)
     {
     // your login failed; probably a bad username or password.
     if (status->type() == alert::LOGIN_FAILED)
@@ -65,6 +65,12 @@ class WatcherHandler : public event::EventHandler
     if (status->type() == alert::BAD_VERSION)
       {
       std::cerr << "API version out of date." << std::endl << std::flush;
+      std::exit(1);
+      }
+    // an unknown problem occurred.
+    if (status->type() == alert::UNKNOWN)
+      {
+      std::cerr << "Unknown Problem." << std::endl << std::flush;
       std::exit(1);
       }
     // everything's good! You're logged in.
@@ -87,22 +93,28 @@ class AccountHandler : public account::EventHandler
   {
   virtual
   int
-  on_status(const Status *status)
+  on_status(const Status& status)
     {
     // your login failed; probably a bad username or password.
-    if (status->type() == alert::LOGIN_FAILED)
+    if (status.type() == alert::LOGIN_FAILED)
       {
       std::cerr << "Login Failed for account subscription." << std::endl << std::flush;
       std::exit(1);
       }
     // the version of the API you're using is too old. You can't log in.
-    if (status->type() == alert::BAD_VERSION)
+    if (status.type() == alert::BAD_VERSION)
       {
       std::cerr << "API version out of date for account subscription." << std::endl << std::flush;
       std::exit(1);
       }
+    // an unknown problem occurred.
+    if (status.type() == alert::UNKNOWN)
+      {
+      std::cerr << "Unknown Problem for account subscription." << std::endl << std::flush;
+      std::exit(1);
+      }
     // everything's good! You're logged in.
-    if (status->type() == alert::LOGIN_COMPLETE)
+    if (status.type() == alert::LOGIN_COMPLETE)
       std::cout << "Login OK for account subscription." << std::endl;
 
     return 0;
@@ -225,6 +237,10 @@ int main(int argc, char** argv)
   auto accts = zf->list_accounts();
   for (auto a = accts.begin(); a != accts.end(); a++)
     acct_subs.push_back(zf->account_subscribe((*a).id(), &account_callback));
+
+  for (auto as = acct_subs.begin(); as != acct_subs.end(); as++)
+    if (!((*as)->sync(2000)))
+      std::cerr << "Waited at least 2 seconds for account subscription for account #" << (*as)->account()->id() << " to start, did not get a response." << std::endl;
 
   // wait 300 seconds, during which all the events that we've written handlers for will print out results to the screen
   COMPAT_SLEEP(300);

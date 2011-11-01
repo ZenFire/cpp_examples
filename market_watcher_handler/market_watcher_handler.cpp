@@ -59,7 +59,7 @@ class WatcherHandler : public event::EventHandler
 protected:
   virtual
   int
-  on_status(const Status *status)
+  on_status(const Status* status)
     {
     // your login failed; probably a bad username or password.
     if (status->type() == alert::LOGIN_FAILED)
@@ -71,6 +71,12 @@ protected:
     if (status->type() == alert::BAD_VERSION)
       {
       std::cerr << "API version out of date." << std::endl << std::flush;
+      std::exit(1);
+      }
+    // an unknown problem occurred.
+    if (status->type() == alert::UNKNOWN)
+      {
+      std::cerr << "Unknown Problem." << std::endl << std::flush;
       std::exit(1);
       }
     // everything's good! You're logged in.
@@ -116,10 +122,10 @@ protected:
   int
   on_status(const Status& status)
     {
+    if(status.type() == alert::UP)
+      std::cout << "STATUS: Feed Up" << std::endl;
     if(status.type() == alert::UNKNOWN)
       std::cerr << "ERROR: Feed Unknown Problem" << std::endl;
-    if(status.type() == alert::UP)
-      std::cout << "ERROR: Feed Up" << std::endl;
     if(status.type() == alert::DOWN)
       std::cout << "ERROR: Feed Down" << std::endl;
     if(status.type() == alert::BAD_VERSION)

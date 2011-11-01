@@ -56,7 +56,7 @@ class PlacerHandler : public event::EventHandler
 protected:
   virtual
   int
-  on_status(const Status *status)
+  on_status(const Status* status)
     {
     // your login failed; probably a bad username or password.
     if (status->type() == alert::LOGIN_FAILED)
@@ -68,6 +68,12 @@ protected:
     if (status->type() == alert::BAD_VERSION)
       {
       std::cerr << "API version out of date." << std::endl << std::flush;
+      std::exit(1);
+      }
+    // an unknown problem occurred.
+    if (status->type() == alert::UNKNOWN)
+      {
+      std::cerr << "Unknown Problem." << std::endl << std::flush;
       std::exit(1);
       }
     // everything's good! You're logged in.
@@ -102,7 +108,35 @@ public:
 
 class AccountHandler : public account::EventHandler
   {
-protected:
+  virtual
+  int
+  on_status(const Status& status)
+    {
+    // your login failed; probably a bad username or password.
+    if (status.type() == alert::LOGIN_FAILED)
+      {
+      std::cerr << "Login Failed for account subscription." << std::endl << std::flush;
+      std::exit(1);
+      }
+    // the version of the API you're using is too old. You can't log in.
+    if (status.type() == alert::BAD_VERSION)
+      {
+      std::cerr << "API version out of date for account subscription." << std::endl << std::flush;
+      std::exit(1);
+      }
+    // an unknown problem occurred.
+    if (status.type() == alert::UNKNOWN)
+      {
+      std::cerr << "Unknown Problem for account subscription." << std::endl << std::flush;
+      std::exit(1);
+      }
+    // everything's good! You're logged in.
+    if (status.type() == alert::LOGIN_COMPLETE)
+      std::cout << "Login OK for account subscription." << std::endl;
+
+    return 0;
+    }
+
   virtual
   int
   on_open(const Order ord)
