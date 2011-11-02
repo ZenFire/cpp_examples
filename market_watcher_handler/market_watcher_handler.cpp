@@ -143,7 +143,7 @@ protected:
     else
       std::cout << t.price();
 
-    std::cout << " size=" << t.size() << std::endl;
+    std::cout << " size=" << t.size() << " flags=" << t.flags() << std::endl;
     }
 
   virtual
