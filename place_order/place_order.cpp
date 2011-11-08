@@ -180,7 +180,9 @@ int main(int argc, char **argv)
     std::exit(1);
   }
 
-  if(argc != 3)
+  bool infinite_fire_forget = false;
+  
+  if(argc != 3 && argc != 4)
     {
     try
       {
@@ -200,6 +202,21 @@ int main(int argc, char **argv)
     zf->login(user, pass);
     }
 
+  if (argc >= 4)
+    {
+    if (std::string(argv[3]) == "infinite_fire_forget")
+      {
+      infinite_fire_forget = true;
+
+      std::cout << "This is going to create a LOT of orders of whatever you place. Do not do this unless you know what you are doing. Pausing 10 seconds before continuing..." << std::endl;
+      COMPAT_SLEEP(10000);
+      }
+    else
+      {
+      std::cerr << "3rd argument can only be infinite_fire_forget if set." << std::endl << std::flush;
+      std::exit(1);
+      }
+    }
   if (!zf->sync(2000))
     {
     std::cerr << "Didn't get a response to login fast enough, exiting." << std::endl << std::flush;
@@ -237,8 +254,11 @@ int main(int argc, char **argv)
   std::cin >> prod;
 
   zf->find_instrument(prod);
-
-  COMPAT_SLEEP(3);
+  if (!(zf->sync(3000)))
+    {
+    std::cerr << "Did not get a response to find_instrument." << std::endl <<std::flush;
+    std::exit(1);
+    }
 
   Instrument product = zf->get_instrument(prod);
 
@@ -248,15 +268,7 @@ int main(int argc, char **argv)
     std::exit(1);
     }
 
-  Exchange product_exchange = zf->get_exchange(product->exchange());
-
-  if (!product_exchange)
-    {
-    std::cerr << "did not get an exchange matching the product." << std::endl << std::flush;
-    std::exit(1);
-    }
-
-  std::cout << "Got product " << product->symbol() << " on exchange " << product_exchange->code() << std::endl;
+  std::cout << "Got product " << product->symbol() << " on exchange " << int(product->exchange()) << std::endl;
 
   zenfire::order::side::Type side = zenfire::order::side::NO_SIDE;
 
@@ -340,20 +352,34 @@ int main(int argc, char **argv)
   specs->set_zentag(std::string("hello this is a test"));
   specs->set_tag(std::string("test"));
 
-  zenfire::Order placed = asub->place_order(specs);
-
-  for (int i = 0; i < 10; i++)
+  if (infinite_fire_forget)
     {
-    COMPAT_SLEEP(1);
-    if (placed->qty_filled() == 1)
+    while (true)
       {
-      std::cout << "filled" << std::endl;
-      return 0;
+      asub->place_order(specs);
+      COMPAT_MSLEEP(1);
       }
+
+    // TODO clean this up reliably somehow.
+    delete zf;
     }
-  std::cout << "did not fill within 10 seconds, but may later. goodbye." << std::endl;
+  else
+    {
+    zenfire::Order placed = asub->place_order(specs);
+
+    for (int i = 0; i < 10; i++)
+      {
+      COMPAT_SLEEP(1);
+      if (placed->qty_filled() == 1)
+        {
+        std::cout << "filled" << std::endl;
+        return 0;
+        }
+      }
+    std::cout << "did not fill within 10 seconds, but may later. goodbye." << std::endl;
   
-  delete zf;
+    delete zf;
+    }
   }
 
 /******************************************************************************

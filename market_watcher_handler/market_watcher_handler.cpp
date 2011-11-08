@@ -281,9 +281,7 @@ int main(int argc, char **argv)
     std::exit(1);
     }
 
-  Exchange exch = zf->get_exchange(inst->exchange());
-
-  std::cout << "Found instrument " << inst->symbol() << ":" << exch->code() << std::endl;
+  std::cout << "Found instrument " << inst->symbol() << " on exchange " << int(inst->exchange()) << std::endl;
 
   feed::SubscriptionPtr sub = zf->feed_subscribe(inst, &tickback);
 
