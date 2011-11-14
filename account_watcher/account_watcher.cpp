@@ -40,7 +40,7 @@ void die_usage(zenfire::event::Client* zf)
   {
   if (zf != NULL)
     delete zf;
-  std::cout << "usage: [user password]" << std::endl;
+  std::cout << "usage: [user password [account_id]]" << std::endl << "\tAt this time, there is an issue subscribing to more than one account, so supply an account ID to subscribe to that account only." << std::endl;
   std::exit(0);
   }
 
