@@ -126,7 +126,10 @@ class AccountHandler : public account::EventHandler
   int
   on_position(const zenfire::account::Event &event, const Position pos)
     {
-    std::cout << "Got Position type=" << event.type() << " account=" << pos->account_id().id() << " instrument=" << pos->instrument_id().id() << " size=" << pos->size() << " open_pl=" << int64_t(pos->open_pl()) << " closed_pl=" << int64_t(pos->closed_pl()) << std::endl;
+    if (event.type() == zenfire::account::Event::Type::END_OF_REPLAY)
+      std::cout << "End of Position replay.";
+    else 
+      std::cout << "Got Position type=" << event.type() << " account=" << pos->account_id().id() << " instrument=" << pos->instrument_id().id() << " size=" << pos->size() << " open_pl=" << int64_t(pos->open_pl()) << " closed_pl=" << int64_t(pos->closed_pl()) << std::endl;
     return 0;
     }
 
@@ -199,10 +202,10 @@ int main(int argc, char** argv)
   event::Client *zf = NULL;
   try {
     zf = zenfire::event::Client::create_ini("examples.conf", &callback);
-  } catch (zenfire::exception::invalid_config& ic) {
+  } catch (zenfire::exception::invalid_config&) {
     std::cout << "could not load config, please run from the directory containing examples.conf." << std::endl << std::flush;
     std::exit(1);
-  } catch (zenfire::exception::keys_missing& km) {
+  } catch (zenfire::exception::keys_missing&) {
     std::cout << "zenfire::exception::keys_missing caught, refer to documentation." << std::endl << std::flush;
     std::exit(1);
   }
@@ -213,7 +216,7 @@ int main(int argc, char** argv)
       {
       zf->login();
       }
-    catch (exception::access_missing& am)
+    catch (exception::access_missing&)
       {
       die_usage(zf);
       }

@@ -137,6 +137,8 @@ class AccountHandler : public account::EventHandler
     return 0;
     }
 
+  // TODO: print out other events.
+
   virtual
   int
   on_open(const Order ord)
@@ -172,10 +174,10 @@ int main(int argc, char **argv)
   event::Client *zf = NULL;
   try {
     zf = zenfire::event::Client::create_ini("examples.conf", &callback);
-  } catch (zenfire::exception::invalid_config& ic) {
+  } catch (zenfire::exception::invalid_config&) {
     std::cout << "could not load config, please run from the directory containing examples.conf." << std::endl << std::flush;
     std::exit(1);
-  } catch (zenfire::exception::keys_missing& km) {
+  } catch (zenfire::exception::keys_missing&) {
     std::cout << "zenfire::exception::keys_missing caught, refer to documentation." << std::endl << std::flush;
     std::exit(1);
   }
@@ -188,7 +190,7 @@ int main(int argc, char **argv)
       {
       zf->login();
       }
-    catch (exception::access_missing& am)
+    catch (exception::access_missing&)
       {
       die_usage(zf);
       }
