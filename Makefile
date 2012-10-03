@@ -9,7 +9,7 @@ OBJS=account_watcher.o market_watcher_handler.o place_order.o
 TOP_DIR=../..
 
 ifdef USESHARED
-	LIBS=$(TOP_DIR)/lib*/libzenfire.so -lpthread -lssl -lcrypto
+	LIBS=$(TOP_DIR)/lib*/libzenfire.so -lpthread -lssl -lcrypto -lrt
 else
 	LIBS=$(TOP_DIR)/lib*/libzenfire.a -lpthread -lssl -lcrypto
 endif
