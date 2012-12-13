@@ -1,5 +1,10 @@
-To Build
---------
+# Build Instructions
+
+## Requirements
+
+g++>=4.4, libssl-dev.  Refer to your distribution's documentation to find out how to install these.
+
+## Step-by-step
 
 To build, use these commands in this directory, after copying cpp_examples
 into the extracted directory for libzenfire.

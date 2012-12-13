@@ -1,6 +1,13 @@
-<A name="toc2-1" title="To Build" />
-To Build
---------
+<A name="toc1-0" title="Build Instructions" />
+# Build Instructions
+
+<A name="toc2-3" title="Requirements" />
+## Requirements
+
+g++>=4.4, libssl-dev.  Refer to your distribution's documentation to find out how to install these.
+
+<A name="toc2-8" title="Step-by-step" />
+## Step-by-step
 
 To build, use these commands in this directory, after copying cpp_examples
 into the extracted directory for libzenfire.

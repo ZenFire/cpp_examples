@@ -129,7 +129,7 @@ class AccountHandler : public account::EventHandler
     if (event.type() == zenfire::account::Event::Type::END_OF_REPLAY)
       std::cout << "End of Position replay.";
     else 
-      std::cout << "Got Position type=" << event.type() << " account=" << pos->account_id().id() << " instrument=" << pos->instrument_id().id() << " size=" << pos->size() << " open_pl=" << int64_t(pos->open_pl()) << " closed_pl=" << int64_t(pos->closed_pl()) << std::endl;
+      std::cout << "Got Position type=" << event.type() << " account=" << pos->account_id().id() << " instrument=" << pos->instrument_id().id() << " size=" << pos->size() << " open_pl=" << int64_t(pos->open_pl()) << " closed_pl=" << int64_t(pos->closed_pl()) << " avg_fill_price=" << int64_t(pos->avg_fill_price()) << std::endl;
     return 0;
     }
 
