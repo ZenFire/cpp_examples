@@ -127,11 +127,27 @@ class AccountHandler : public account::EventHandler
   on_position(const zenfire::account::Event &event, const Position pos)
     {
     if (event.type() == zenfire::account::Event::Type::END_OF_REPLAY)
-      std::cout << "End of Position replay.";
+      std::cout << "End of Position replay." << std::endl;
     else 
       std::cout << "Got Position type=" << event.type() << " account=" << pos->account_id().id() << " instrument=" << pos->instrument_id().id() << " size=" << pos->size() << " open_pl=" << int64_t(pos->open_pl()) << " closed_pl=" << int64_t(pos->closed_pl()) << " avg_fill_price=" << int64_t(pos->avg_fill_price()) << std::endl;
     return 0;
     }
+
+  virtual
+  int
+  on_balance(const zenfire::account::Event &event, const Balance bal)
+    {
+    if (event.type() == zenfire::account::Event::Type::END_OF_REPLAY)
+      {
+      std::cout << "End of Balance replay." << std::endl;
+      return 0;
+      }
+
+    std::cout << "Got Balance account_id=" << bal->account_id().id() << " cash_on_hand=" << (double)(bal->cash_on_hand()) << " used_margin=" << (double)(bal->used_margin()) << " open_pnl=" << (double)(bal->open_pnl()) << " closed_pnl=" << (double)(bal->closed_pnl()) << " currency_id=" << (int)(bal->currency_id()) << std::endl;
+
+    return 0;
+    }
+
 
   void
   print_orderinfo(std::string naming, const Order& ord, bool detail=false)

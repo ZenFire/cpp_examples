@@ -7,6 +7,7 @@
 #  define COMPAT_SLEEP(a) Sleep((a * 1000))
 #  define COMPAT_MSLEEP(a) Sleep(a)
 #else
+#  include <unistd.h>
 #  define COMPAT_SLEEP(a) sleep(a)
 #  define COMPAT_MSLEEP(a) usleep(a * 1000)
 #endif
